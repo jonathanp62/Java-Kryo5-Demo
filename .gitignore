@@ -5,3 +5,4 @@ gradle/*
 !gradle/libs.versions.toml
 gradlew
 target
+temp

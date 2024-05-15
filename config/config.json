@@ -1,0 +1,6 @@
+{
+  "files": {
+    "main": "temp/objects.dat",
+    "test": "temp/test-objects.dat"
+  }
+}

@@ -1,10 +1,11 @@
 package net.jmp.demo.kryo5;
 
 /*
+ * (#)Main.java 0.2.0   05/15/2024
  * (#)Main.java 0.1.0   05/15/2024
  *
  * @author   Jonathan Parker
- * @version  0.1.0
+ * @version  0.2.0
  * @since    0.1.0
  *
  * MIT License
@@ -30,11 +31,23 @@ package net.jmp.demo.kryo5;
  * SOFTWARE.
  */
 
+import com.google.gson.Gson;
 import org.slf4j.LoggerFactory;
 
 import org.slf4j.ext.XLogger;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Optional;
+
+/**
+ * The main class.
+ */
 public final class Main {
+    /** The configuration file name. */
+    private static final String APP_CONFIG_FILE = "config/config.json";
+
     /** The logger. */
     private final XLogger logger = new XLogger(LoggerFactory.getLogger(this.getClass().getName()));
 
@@ -53,7 +66,32 @@ public final class Main {
 
         this.logger.info("Kryo5-Demo {}", Version.VERSION_STRING);
 
+        this.getAppConfig().ifPresent(config -> {
+            new Objects(config).execute();
+        });
+
         this.logger.exit();
+    }
+
+    /**
+     * Get the application configuration.
+     *
+     * @return  java.lang.Optional&lt;net.jmp.demo.kryo5.Config&gt;
+     */
+    private Optional<Config> getAppConfig() {
+        this.logger.entry();
+
+        Config appConfig = null;
+
+        try {
+            appConfig = new Gson().fromJson(Files.readString(Paths.get(APP_CONFIG_FILE)), Config.class);
+        } catch (final IOException ioe) {
+            this.logger.catching(ioe);
+        }
+
+        this.logger.exit(appConfig);
+
+        return Optional.ofNullable(appConfig);
     }
 
     /**

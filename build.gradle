@@ -66,6 +66,7 @@ repositories {
 
 dependencies {
     implementation libs.com.esotericsoftware.kryo.kryo5
+    implementation libs.com.google.code.gson.gson
     implementation libs.org.slf4j.slf4j.api
     implementation libs.org.slf4j.slf4j.ext
 
