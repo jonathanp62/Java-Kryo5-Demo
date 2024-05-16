@@ -1,7 +1,7 @@
 package net.jmp.demo.kryo5.objects;
 
 /*
- * (#)Person.java   0.3.0   05/16/2024
+ * (#)Chair.java    0.3.0   05/16/2024
  *
  * @author   Jonathan Parker
  * @version  0.3.0
@@ -30,75 +30,57 @@ package net.jmp.demo.kryo5.objects;
  * SOFTWARE.
  */
 
-import java.util.Date;
 import java.util.Objects;
 
-/**
- * A person class to serialize and deserialize.
- *
- * The class and methods must be public in order
- * to work with a custom serializer.
- */
-public final class Person {
-    private String name;
-    private int age;
-    private Date birthday;
+public final class Chair {
+    private String color;
+    private boolean hasWheels;
 
-    public Person() {
+    public Chair() {
         super();
     }
 
-    public String getName() {
-        return this.name;
+    public String getColor() {
+        return this.color;
     }
 
-    public void setName(final String name) {
-        this.name = name;
+    public void setColor(final String color) {
+        this.color = color;
     }
 
-    public int getAge() {
-        return this.age;
+    public boolean isHasWheels() {
+        return this.hasWheels;
     }
 
-    public void setAge(final int age) {
-        this.age = age;
-    }
-
-    public Date getBirthday() {
-        return this.birthday;
-    }
-
-    public void setBirthday(final Date birthday) {
-        this.birthday = birthday;
+    public void setHasWheels(final boolean hasWheels) {
+        this.hasWheels = hasWheels;
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        final Person person = (Person) o;
+        final Chair chair = (Chair) o;
 
-        return this.age == person.age && Objects.equals(this.name, person.name) && Objects.equals(this.birthday, person.birthday);
+        return this.hasWheels == chair.hasWheels && Objects.equals(this.color, chair.color);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hashCode(this.name);
+        int result = Objects.hashCode(this.color);
 
-        result = 31 * result + this.age;
-        result = 31 * result + Objects.hashCode(this.birthday);
+        result = 31 * result + Boolean.hashCode(this.hasWheels);
 
         return result;
     }
 
     @Override
     public String toString() {
-        return "Person{" +
-                "name='" + this.name + '\'' +
-                ", age=" + this.age +
-                ", birthday=" + this.birthday +
+        return "Chair{" +
+                "color='" + this.color + '\'' +
+                ", hasWheels=" + this.hasWheels +
                 '}';
     }
 }

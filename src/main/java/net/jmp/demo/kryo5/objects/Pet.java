@@ -1,7 +1,7 @@
 package net.jmp.demo.kryo5.objects;
 
 /*
- * (#)Person.java   0.3.0   05/16/2024
+ * (#)Pet.java  0.3.0   05/16/2024
  *
  * @author   Jonathan Parker
  * @version  0.3.0
@@ -30,22 +30,24 @@ package net.jmp.demo.kryo5.objects;
  * SOFTWARE.
  */
 
-import java.util.Date;
 import java.util.Objects;
 
-/**
- * A person class to serialize and deserialize.
- *
- * The class and methods must be public in order
- * to work with a custom serializer.
- */
-public final class Person {
+public final class Pet {
+    private String type;
     private String name;
+    private String color;
     private int age;
-    private Date birthday;
 
-    public Person() {
+    public Pet() {
         super();
+    }
+
+    public String getType() {
+        return this.type;
+    }
+
+    public void setType(final String type) {
+        this.type = type;
     }
 
     public String getName() {
@@ -56,6 +58,14 @@ public final class Person {
         this.name = name;
     }
 
+    public String getColor() {
+        return this.color;
+    }
+
+    public void setColor(final String color) {
+        this.color = color;
+    }
+
     public int getAge() {
         return this.age;
     }
@@ -64,41 +74,35 @@ public final class Person {
         this.age = age;
     }
 
-    public Date getBirthday() {
-        return this.birthday;
-    }
-
-    public void setBirthday(final Date birthday) {
-        this.birthday = birthday;
-    }
-
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        final Person person = (Person) o;
+        final Pet pet = (Pet) o;
 
-        return this.age == person.age && Objects.equals(this.name, person.name) && Objects.equals(this.birthday, person.birthday);
+        return this.age == pet.age && Objects.equals(this.type, pet.type) && Objects.equals(this.name, pet.name) && Objects.equals(this.color, pet.color);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hashCode(this.name);
+        int result = Objects.hashCode(type);
 
+        result = 31 * result + Objects.hashCode(this.name);
+        result = 31 * result + Objects.hashCode(this.color);
         result = 31 * result + this.age;
-        result = 31 * result + Objects.hashCode(this.birthday);
 
         return result;
     }
 
     @Override
     public String toString() {
-        return "Person{" +
-                "name='" + this.name + '\'' +
+        return "Pet{" +
+                "type='" + this.type + '\'' +
+                ", name='" + this.name + '\'' +
+                ", color='" + this.color + '\'' +
                 ", age=" + this.age +
-                ", birthday=" + this.birthday +
                 '}';
     }
 }
