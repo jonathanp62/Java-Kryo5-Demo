@@ -32,21 +32,24 @@ package net.jmp.demo.kryo5;
  */
 
 import com.google.gson.Gson;
+
+import java.io.IOException;
+
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import java.util.Optional;
+
 import org.slf4j.LoggerFactory;
 
 import org.slf4j.ext.XLogger;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Optional;
 
 /**
  * The main class.
  */
 public final class Main {
-    /** The configuration file name. */
-    private static final String APP_CONFIG_FILE = "config/config.json";
+    /** The default configuration file name. */
+    private static final String DEFAULT_APP_CONFIG_FILE = "config/config.json";
 
     /** The logger. */
     private final XLogger logger = new XLogger(LoggerFactory.getLogger(this.getClass().getName()));
@@ -81,10 +84,17 @@ public final class Main {
     private Optional<Config> getAppConfig() {
         this.logger.entry();
 
+        final var configurationFile = System.getProperty("app.configurationFile", DEFAULT_APP_CONFIG_FILE);
+
+        assert configurationFile != null;
+        assert !configurationFile.isBlank();
+
+        this.logger.info("Configuration: {}", configurationFile);
+
         Config appConfig = null;
 
         try {
-            appConfig = new Gson().fromJson(Files.readString(Paths.get(APP_CONFIG_FILE)), Config.class);
+            appConfig = new Gson().fromJson(Files.readString(Paths.get(configurationFile)), Config.class);
         } catch (final IOException ioe) {
             this.logger.catching(ioe);
         }

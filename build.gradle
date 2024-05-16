@@ -110,7 +110,7 @@ tasks.withType(Javadoc) {
  */
 
 tasks.register('execProgram', JavaExec) {
-    allJvmArgs = ['-ea', '-Dlogback.configurationFile=config/logback.xml']
+    allJvmArgs = ['-ea', '-Dapp.configurationFile=config/config.json', '-Dlogback.configurationFile=config/logback.xml']
     classpath = sourceSets.main.runtimeClasspath
     description = "Run the main class with JavaExecTask"
     group = "Execution"

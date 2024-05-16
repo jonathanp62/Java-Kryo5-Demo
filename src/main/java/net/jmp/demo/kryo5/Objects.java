@@ -31,6 +31,7 @@ package net.jmp.demo.kryo5;
  */
 
 import com.esotericsoftware.kryo.kryo5.Kryo;
+import com.esotericsoftware.kryo.kryo5.Registration;
 
 import com.esotericsoftware.kryo.kryo5.io.Input;
 import com.esotericsoftware.kryo.kryo5.io.Output;
@@ -66,6 +67,8 @@ final class Objects {
     Objects(final Config config) {
         super();
 
+        assert config != null;
+
         this.config = config;
     }
 
@@ -97,6 +100,14 @@ final class Objects {
         final String outputFileName = this.config.getConfigFiles().getMain();
 
         this.kryo.register(Object.class);
+
+        /* Registration */
+
+        final Registration registration = this.kryo.getRegistration(Object.class);
+
+        if (this.logger.isInfoEnabled()) {
+            this.logger.info("Registration ID for Object: {}", registration.getId());
+        }
 
         try (final var output = new Output(new FileOutputStream(outputFileName))) {
             this.kryo.writeClassAndObject(output, object);
@@ -149,6 +160,16 @@ final class Objects {
             this.kryo.writeObject(output, myDate);
         } catch (final FileNotFoundException fnfe) {
             this.logger.catching(fnfe);
+        }
+
+        /* Registration */
+
+        final var stringRegistration = this.kryo.getRegistration(String.class);
+        final var dateRegistration = this.kryo.getRegistration(Date.class);
+
+        if (this.logger.isInfoEnabled()) {
+            this.logger.info("Registration ID for Date  : {}", dateRegistration.getId());
+            this.logger.info("Registration ID for String: {}", stringRegistration.getId());
         }
 
         /* Deserialize */
