@@ -44,7 +44,10 @@
     <logger name="net.jmp.demo.kryo5.Objects" additivity="false" level="debug">
         <appender-ref ref="MAIN" />
     </logger>
-    <logger name="net.jmp.demo.kryo5.PersonSerializer" additivity="false" level="trace">
+    <logger name="net.jmp.demo.kryo5.custom.PersonSerializer" additivity="false" level="trace">
+        <appender-ref ref="MAIN" />
+    </logger>
+    <logger name="net.jmp.demo.kryo5.custom.PetSerializer" additivity="false" level="trace">
         <appender-ref ref="MAIN" />
     </logger>
     <logger name="net.jmp.demo.kryo5.Serializers" additivity="false" level="trace">

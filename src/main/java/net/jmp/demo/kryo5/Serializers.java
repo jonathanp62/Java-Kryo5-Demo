@@ -53,6 +53,7 @@ import net.jmp.demo.kryo5.config.Config;
 import net.jmp.demo.kryo5.custom.PersonSerializer;
 
 import net.jmp.demo.kryo5.objects.Person;
+import net.jmp.demo.kryo5.objects.Pet;
 
 /**
  * The serializers class.
@@ -214,6 +215,45 @@ final class Serializers {
      */
     private void annotatedDefaultSerializer() {
         this.logger.entry();
+
+        final var pet = new Pet();
+
+        pet.setAge(12);
+        pet.setName("Lady");
+        pet.setColor("Black & tan");
+        pet.setType("German Shepherd Dog");
+
+        final var outputFileName = this.config.getConfigFiles().getMain();
+
+        /* Serialize pet */
+
+        this.kryo.register(Pet.class);
+
+        try (final var output = new Output(new FileOutputStream(outputFileName))) {
+            this.kryo.writeObject(output, pet);
+        } catch (final FileNotFoundException fnfe) {
+            this.logger.catching(fnfe);
+        }
+
+        /* Deserialize */
+
+        try (final var input = new Input(new FileInputStream(outputFileName))) {
+            final var deserializedPet = this.kryo.readObject(input, Pet.class);
+
+            if (deserializedPet.equals(pet))
+                this.logger.info("Serialized pet and deserialized pet match");
+            else {
+                this.logger.warn("Serialized pet and deserialized pet do not match");
+
+                if (this.logger.isDebugEnabled()) {
+                    this.logger.debug("pet         : {}", pet.toString());
+                    this.logger.debug("deserialized: {}", deserializedPet.toString());
+                }
+            }
+        } catch (final FileNotFoundException fnfe) {
+            this.logger.catching(fnfe);
+        }
+
         this.logger.exit();
     }
 

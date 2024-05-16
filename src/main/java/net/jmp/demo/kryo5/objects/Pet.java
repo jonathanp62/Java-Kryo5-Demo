@@ -30,8 +30,13 @@ package net.jmp.demo.kryo5.objects;
  * SOFTWARE.
  */
 
+import com.esotericsoftware.kryo.kryo5.DefaultSerializer;
+
+import net.jmp.demo.kryo5.custom.PetSerializer;
+
 import java.util.Objects;
 
+@DefaultSerializer(PetSerializer.class)
 public final class Pet {
     private String type;
     private String name;
