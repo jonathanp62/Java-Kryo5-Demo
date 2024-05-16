@@ -1,13 +1,11 @@
 package net.jmp.demo.kryo5;
 
 /*
- * (#)Main.java 0.3.0   05/16/2024
- * (#)Main.java 0.2.0   05/15/2024
- * (#)Main.java 0.1.0   05/15/2024
+ * (#)TestSerializers.java  0.3.0   05/16/2024
  *
  * @author   Jonathan Parker
  * @version  0.3.0
- * @since    0.1.0
+ * @since    0.3.0
  *
  * MIT License
  *
@@ -32,8 +30,16 @@ package net.jmp.demo.kryo5;
  * SOFTWARE.
  */
 
+import com.esotericsoftware.kryo.kryo5.Kryo;
+
+import com.esotericsoftware.kryo.kryo5.io.Input;
+import com.esotericsoftware.kryo.kryo5.io.Output;
+
 import com.google.gson.Gson;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import java.nio.file.Files;
@@ -41,42 +47,23 @@ import java.nio.file.Paths;
 
 import java.util.Optional;
 
-import org.slf4j.LoggerFactory;
+import org.junit.Before;
+import org.junit.Test;
 
-import org.slf4j.ext.XLogger;
+import static org.junit.Assert.assertEquals;
 
-/**
- * The main class.
- */
-public final class Main {
-    /** The default configuration file name. */
-    private static final String DEFAULT_APP_CONFIG_FILE = "config/config.json";
+public class TestSerializers {
+    /** The configuration file name. */
+    private static final String APP_CONFIG_FILE = "config/config.json";
 
-    /** The logger. */
-    private final XLogger logger = new XLogger(LoggerFactory.getLogger(this.getClass().getName()));
+    /** The Kryo5 object. */
+    private final Kryo kryo = new Kryo();
 
-    /**
-     * The default constructor.
-     */
-    private Main() {
-        super();
-    }
+    /** The output object. */
+    private Output output;
 
-    /**
-     * The execute method.
-     */
-    private void execute() {
-        this.logger.entry();
-
-        this.logger.info("Kryo5-Demo {}", Version.VERSION_STRING);
-
-        this.getAppConfig().ifPresent(config -> {
-            new Objects(config).execute();
-            new Serializers(config).execute();
-        });
-
-        this.logger.exit();
-    }
+    /** The input object. */
+    private Input input;
 
     /**
      * Get the application configuration.
@@ -84,34 +71,36 @@ public final class Main {
      * @return  java.lang.Optional&lt;net.jmp.demo.kryo5.Config&gt;
      */
     private Optional<Config> getAppConfig() {
-        this.logger.entry();
-
-        final var configurationFile = System.getProperty("app.configurationFile", DEFAULT_APP_CONFIG_FILE);
-
-        assert configurationFile != null;
-        assert !configurationFile.isBlank();
-
-        this.logger.info("Configuration: {}", configurationFile);
-
         Config appConfig = null;
 
         try {
-            appConfig = new Gson().fromJson(Files.readString(Paths.get(configurationFile)), Config.class);
+            appConfig = new Gson().fromJson(Files.readString(Paths.get(APP_CONFIG_FILE)), Config.class);
         } catch (final IOException ioe) {
-            this.logger.catching(ioe);
+            ioe.printStackTrace(System.err);
         }
-
-        this.logger.exit(appConfig);
 
         return Optional.ofNullable(appConfig);
     }
 
     /**
-     * The main method.
-     *
-     * @param   args    java.lang.String[]
+     * Execute before each test.
      */
-    public static void main(final String[] args) {
-        new Main().execute();
+    @Before
+    public void before() {
+        this.getAppConfig().ifPresent(config -> {
+            final var outputLocation = config.getConfigFiles().getTest();
+
+            try {
+                this.output = new Output(new FileOutputStream(outputLocation));
+                this.input = new Input(new FileInputStream(outputLocation));
+            } catch (final FileNotFoundException fnfe) {
+                fnfe.printStackTrace(System.err);
+            }
+        });
+    }
+
+    @Test
+    public void testSomething() {
+        assertEquals(1, 2-1);
     }
 }
