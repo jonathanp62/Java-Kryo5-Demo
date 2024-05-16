@@ -45,12 +45,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class TestSerializers {
     /** The configuration file name. */
@@ -99,8 +102,37 @@ public class TestSerializers {
         });
     }
 
+    /**
+     * Test the default FieldSerializer.
+     */
     @Test
-    public void testSomething() {
-        assertEquals(1, 2-1);
+    public void testDefaultSerializer() {
+        final var name = "Jonathan Martin";
+        final var person = new Person();
+
+        try {
+            person.setAge(62);
+            person.setBirthday(new SimpleDateFormat("MM/dd/yyyy").parse("02/05/1962"));
+            person.setName(name);
+        } catch (final ParseException pe) {
+            pe.printStackTrace(System.err);
+        }
+
+        assertEquals(62, person.getAge());
+        assertNotNull(person.getBirthday());
+        assertEquals(name, person.getName());
+
+        this.kryo.register(Person.class);
+        this.kryo.register(String.class);
+        this.kryo.register(Date.class);
+
+        this.kryo.writeObject(this.output, person);
+        this.output.close();
+
+        final var thePerson = kryo.readObject(this.input, Person.class);
+
+        this.input.close();
+
+        assertEquals(person, thePerson);
     }
 }

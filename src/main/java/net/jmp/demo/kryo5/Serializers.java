@@ -35,6 +35,13 @@ import com.esotericsoftware.kryo.kryo5.Kryo;
 import com.esotericsoftware.kryo.kryo5.io.Input;
 import com.esotericsoftware.kryo.kryo5.io.Output;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.slf4j.LoggerFactory;
 
 import org.slf4j.ext.XLogger;
@@ -70,6 +77,61 @@ final class Serializers {
      */
     void execute() {
         this.logger.entry();
+
+        this.defaultSerializer();
+
+        this.logger.exit();
+    }
+
+    /**
+     * Use the default FieldSerializer.
+     */
+    private void defaultSerializer() {
+        this.logger.entry();
+
+        final var name = "Jonathan Martin";
+        final var person = new Person();
+
+        try {
+            person.setAge(62);
+            person.setBirthday(new SimpleDateFormat("MM/dd/yyyy").parse("02/05/1962"));
+            person.setName(name);
+        } catch (final ParseException pe) {
+            this.logger.catching(pe);
+        }
+
+        /* Make sure that person is fully set up */
+
+        assert person.getAge() == 62;
+        assert person.getBirthday() != null;
+        assert person.getName().equals(name);
+
+        final var outputFileName = this.config.getConfigFiles().getMain();
+
+        /* Serialize person */
+
+        this.kryo.register(Person.class);
+        this.kryo.register(Date.class);
+        this.kryo.register(String.class);
+
+        try (final var output = new Output(new FileOutputStream(outputFileName))) {
+            this.kryo.writeObject(output, person);
+        } catch (final FileNotFoundException fnfe) {
+            this.logger.catching(fnfe);
+        }
+
+        /* Deserialize */
+
+        try (final var input = new Input(new FileInputStream(outputFileName))) {
+            final var deserializedPerson = this.kryo.readObject(input, Person.class);
+
+            if (deserializedPerson.equals(person))
+                this.logger.info("Serialized person and deserialized person match");
+            else
+                this.logger.warn("Serialized person and deserialized person do not match");
+        } catch (final FileNotFoundException fnfe) {
+            this.logger.catching(fnfe);
+        }
 
         this.logger.exit();
     }

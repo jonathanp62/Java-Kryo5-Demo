@@ -110,10 +110,10 @@ public class TestObjects {
 
         this.kryo.register(Object.class);
 
-        this.kryo.writeClassAndObject(output, someObject);
+        this.kryo.writeClassAndObject(this.output, someObject);
         this.output.close();
 
-        final Object theObject = kryo.readClassAndObject(input);
+        final Object theObject = kryo.readClassAndObject(this.input);
 
         this.input.close();
 
@@ -131,12 +131,12 @@ public class TestObjects {
         this.kryo.register(String.class);
         this.kryo.register(Date.class);
 
-        this.kryo.writeObject(output, someString);
-        this.kryo.writeObject(output, someDate);
+        this.kryo.writeObject(this.output, someString);
+        this.kryo.writeObject(this.output, someDate);
         this.output.close();
 
-        final String readString = kryo.readObject(input, String.class);
-        final Date readDate = kryo.readObject(input, Date.class);
+        final String readString = kryo.readObject(this.input, String.class);
+        final Date readDate = kryo.readObject(this.input, Date.class);
 
         this.input.close();
 
