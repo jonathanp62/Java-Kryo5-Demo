@@ -143,16 +143,57 @@ public class TestSerializers {
         assertEquals(person, thePerson);
     }
 
+    /**
+     * Test a custom serializer.
+     */
     @Test
     public void testCustomSerializer() {
-        assertTrue(true);
+        final var name = "Wendy Carol";
+        final var person = new Person();
+
+        try {
+            person.setAge(60);
+            person.setBirthday(new SimpleDateFormat("MM/dd/yyyy").parse("12/08/1963"));
+            person.setName(name);
+        } catch (final ParseException pe) {
+            pe.printStackTrace(System.err);
+        }
+
+        /* Make sure that person is fully set up */
+
+        assertEquals(60, person.getAge());
+        assertNotNull(person.getBirthday());
+        assertEquals(name, person.getName());
+
+        /* Register the custom serializer */
+
+        this.kryo.register(Person.class, new PersonSerializer());
+
+        /* Serialize person */
+
+        this.kryo.writeObject(output, person);
+        this.output.close();
+
+        /* Deserialize */
+
+        final var deserializedPerson = this.kryo.readObject(input, Person.class);
+
+        this.input.close();
+
+        assertEquals(person, deserializedPerson);
     }
 
+    /**
+     * Test an object annotated with a default serializer.
+     */
     @Test
     public void testAnnotatedDefaultSerializer() {
         assertTrue(true);
     }
 
+    /**
+     * Test an object that implements the KryoSerializable interface.
+     */
     @Test
     public void testKryoSerializable() {
         assertTrue(true);
