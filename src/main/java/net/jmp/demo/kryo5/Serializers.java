@@ -38,8 +38,10 @@ import com.esotericsoftware.kryo.kryo5.io.Output;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
 import java.util.Date;
 
 import org.slf4j.LoggerFactory;
@@ -79,6 +81,7 @@ final class Serializers {
         this.logger.entry();
 
         this.defaultSerializer();
+        this.customSerializer();
 
         this.logger.exit();
     }
@@ -129,6 +132,65 @@ final class Serializers {
                 this.logger.info("Serialized person and deserialized person match");
             else
                 this.logger.warn("Serialized person and deserialized person do not match");
+        } catch (final FileNotFoundException fnfe) {
+            this.logger.catching(fnfe);
+        }
+
+        this.logger.exit();
+    }
+
+    /**
+     * Use a custom serializer.
+     */
+    private void customSerializer() {
+        this.logger.entry();
+
+        final var name = "Wendy Carol";
+        final var person = new Person();
+
+        try {
+            person.setAge(60);
+            person.setBirthday(new SimpleDateFormat("MM/dd/yyyy").parse("12/08/1963"));
+            person.setName(name);
+        } catch (final ParseException pe) {
+            this.logger.catching(pe);
+        }
+
+        /* Make sure that person is fully set up */
+
+        assert person.getAge() == 60;
+        assert person.getBirthday() != null;
+        assert person.getName().equals(name);
+
+        final var outputFileName = this.config.getConfigFiles().getMain();
+
+        /* Register the custom serializer */
+
+        this.kryo.register(Person.class, new PersonSerializer());
+
+        /* Serialize person */
+
+        try (final var output = new Output(new FileOutputStream(outputFileName))) {
+            this.kryo.writeObject(output, person);
+        } catch (final FileNotFoundException fnfe) {
+            this.logger.catching(fnfe);
+        }
+
+        /* Deserialize */
+
+        try (final var input = new Input(new FileInputStream(outputFileName))) {
+            final var deserializedPerson = this.kryo.readObject(input, Person.class);
+
+            if (deserializedPerson.equals(person))
+                this.logger.info("Serialized person and deserialized person match");
+            else {
+                this.logger.warn("Serialized person and deserialized person do not match");
+
+                if (this.logger.isDebugEnabled()) {
+                    this.logger.debug("person      : {}", person.toString());
+                    this.logger.debug("deserialized: {}", deserializedPerson.toString());
+                }
+            }
         } catch (final FileNotFoundException fnfe) {
             this.logger.catching(fnfe);
         }

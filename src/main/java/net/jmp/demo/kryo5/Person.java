@@ -35,37 +35,40 @@ import java.util.Objects;
 
 /**
  * A person class to serialize and deserialize.
+ *
+ * The class and methods must be public in order
+ * to work with a custom serializer.
  */
-final class Person {
+public final class Person {
     private String name;
     private int age;
     private Date birthday;
 
-    Person() {
+    public Person() {
         super();
     }
 
-    String getName() {
+    public String getName() {
         return this.name;
     }
 
-    void setName(final String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
-    int getAge() {
+    public int getAge() {
         return this.age;
     }
 
-    void setAge(final int age) {
+    public void setAge(final int age) {
         this.age = age;
     }
 
-    Date getBirthday() {
+    public Date getBirthday() {
         return this.birthday;
     }
 
-    void setBirthday(final Date birthday) {
+    public void setBirthday(final Date birthday) {
         this.birthday = birthday;
     }
 
