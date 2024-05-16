@@ -1,4 +1,4 @@
-package net.jmp.demo.kryo5;
+package net.jmp.demo.kryo5.custom;
 
 /*
  * (#)PersonSerializer.java 0.3.0   05/16/2024
@@ -37,6 +37,8 @@ import com.esotericsoftware.kryo.kryo5.io.Input;
 import com.esotericsoftware.kryo.kryo5.io.Output;
 
 import java.util.Date;
+
+import net.jmp.demo.kryo5.objects.Person;
 
 import org.slf4j.LoggerFactory;
 

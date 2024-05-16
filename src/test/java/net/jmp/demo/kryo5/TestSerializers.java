@@ -56,6 +56,12 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+import net.jmp.demo.kryo5.config.Config;
+
+import net.jmp.demo.kryo5.custom.PersonSerializer;
+
+import net.jmp.demo.kryo5.objects.Person;
+
 public class TestSerializers {
     /** The configuration file name. */
     private static final String APP_CONFIG_FILE = "config/config.json";
@@ -135,5 +141,20 @@ public class TestSerializers {
         this.input.close();
 
         assertEquals(person, thePerson);
+    }
+
+    @Test
+    public void testCustomSerializer() {
+        assertTrue(true);
+    }
+
+    @Test
+    public void testAnnotatedDefaultSerializer() {
+        assertTrue(true);
+    }
+
+    @Test
+    public void testKryoSerializable() {
+        assertTrue(true);
     }
 }

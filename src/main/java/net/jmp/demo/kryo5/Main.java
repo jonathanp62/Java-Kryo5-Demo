@@ -45,6 +45,8 @@ import org.slf4j.LoggerFactory;
 
 import org.slf4j.ext.XLogger;
 
+import net.jmp.demo.kryo5.config.Config;
+
 /**
  * The main class.
  */

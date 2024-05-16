@@ -1,4 +1,4 @@
-package net.jmp.demo.kryo5;
+package net.jmp.demo.kryo5.config;
 
 /*
  * (#)Config.java   0.2.0   05/15/2024
@@ -35,7 +35,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * The configuration class.
  */
-final class Config {
+public final class Config {
     /** The files section oof the configuration. */
     @SerializedName("files")
     private ConfigFiles configFiles;
@@ -45,7 +45,7 @@ final class Config {
      *
      * @return  net.jmp.demo.kryo5.ConfigFiles
      */
-    ConfigFiles getConfigFiles() {
+    public ConfigFiles getConfigFiles() {
         return this.configFiles;
     }
 
@@ -54,7 +54,7 @@ final class Config {
      *
      * @param   configFiles net.jmp.demo.kryo5.ConfigFiles
      */
-    void setConfigFiles(final ConfigFiles configFiles) {
+    public void setConfigFiles(final ConfigFiles configFiles) {
         this.configFiles = configFiles;
     }
 

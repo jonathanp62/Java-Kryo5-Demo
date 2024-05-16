@@ -1,4 +1,4 @@
-package net.jmp.demo.kryo5;
+package net.jmp.demo.kryo5.objects;
 
 /*
  * (#)Serializers.java  0.3.0   05/16/2024

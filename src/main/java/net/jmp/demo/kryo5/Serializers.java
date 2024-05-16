@@ -48,6 +48,12 @@ import org.slf4j.LoggerFactory;
 
 import org.slf4j.ext.XLogger;
 
+import net.jmp.demo.kryo5.config.Config;
+
+import net.jmp.demo.kryo5.custom.PersonSerializer;
+
+import net.jmp.demo.kryo5.objects.Person;
+
 /**
  * The serializers class.
  */
@@ -82,6 +88,8 @@ final class Serializers {
 
         this.defaultSerializer();
         this.customSerializer();
+        this.annotatedDefaultSerializer();
+        this.kryoSerializable();
 
         this.logger.exit();
     }
@@ -195,6 +203,25 @@ final class Serializers {
             this.logger.catching(fnfe);
         }
 
+        this.logger.exit();
+    }
+
+    /**
+     * Use an annotated default serializer.
+     * An annotated default serializer
+     * avoids the need to register the
+     * serializer with runtime code.
+     */
+    private void annotatedDefaultSerializer() {
+        this.logger.entry();
+        this.logger.exit();
+    }
+
+    /**
+     * Use the Kryo serializable interface.
+     */
+    private void kryoSerializable() {
+        this.logger.entry();
         this.logger.exit();
     }
 }

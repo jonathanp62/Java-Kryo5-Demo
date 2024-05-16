@@ -54,6 +54,8 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
+import net.jmp.demo.kryo5.config.Config;
+
 public class TestObjects {
     /** The configuration file name. */
     private static final String APP_CONFIG_FILE = "config/config.json";
