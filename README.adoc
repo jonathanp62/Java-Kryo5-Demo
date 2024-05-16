@@ -6,4 +6,4 @@ This demonstration program focuses on using Kryo5 for serialization and deserial
 
 Logging is achieved using the SLF4J facade over Logback. The logging configuration is supplied in config/logback.xml.
 
-=== Current version: 0.2.0.
+=== Current version: 0.3.0.

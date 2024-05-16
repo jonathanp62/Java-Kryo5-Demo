@@ -1,6 +1,7 @@
 package net.jmp.demo.kryo5;
 
 /*
+ * (#)Version.java  0.3.0   05/16/2024
  * (#)Version.java  0.2.0   05/15/2024
  * (#)Version.java  0.1.0   05/15/2024
  *
@@ -36,7 +37,7 @@ package net.jmp.demo.kryo5;
  */
 final class Version {
     /** The version. */
-    static final String VERSION_STRING = "0.2.0";
+    static final String VERSION_STRING = "0.3.0";
 
     /**
      * The default constructor.
