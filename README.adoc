@@ -9,8 +9,25 @@ The configuration is expressed in JSON and is supplied in config/config.json. It
 * *main* The name of the file that objects will be serialized to by the application
 * *test* The name of the file that objects will be serialized to by the unit tests
 
+The configuration file name can be supplied using the *app.configurationFile* system property. The default file is config/config.json.
+
 == Logging
 
 Logging is achieved using the SLF4J facade over Logback. The logging configuration is supplied in config/logback.xml.
+
+== Demonstrated Concepts
+
+* Serializing objects using write/readClassAndObject methods
+* Using the default _FieldSerializer_
+* Creating a custom serializer that extends _Serializer_
+* Creating a custom serializer that is not registered but annotated with _DefaultSerializer_
+* Creating a class that implements _KryoSerializer_
+* Using the _JavaSerializer_
+
+== Resources
+
+https://www.baeldung.com/kryo
+https://javadoc.io/doc/com.esotericsoftware/kryo/5.0.3/index.html
+https://github.com/EsotericSoftware/kryo
 
 === Current version: 0.4.0.
