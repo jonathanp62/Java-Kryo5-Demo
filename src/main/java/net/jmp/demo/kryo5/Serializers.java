@@ -1,10 +1,11 @@
 package net.jmp.demo.kryo5;
 
 /*
+ * (#)Serializers.java  0.4.0   05/17/2024
  * (#)Serializers.java  0.3.0   05/16/2024
  *
  * @author   Jonathan Parker
- * @version  0.3.0
+ * @version  0.4.0
  * @since    0.3.0
  *
  * MIT License
@@ -42,8 +43,12 @@ import java.io.FileOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import com.esotericsoftware.kryo.kryo5.serializers.JavaSerializer;
+import net.jmp.demo.kryo5.objects.Recording;
 import org.slf4j.LoggerFactory;
 
 import org.slf4j.ext.XLogger;
@@ -92,6 +97,7 @@ final class Serializers {
         this.customSerializer();
         this.annotatedDefaultSerializer();
         this.kryoSerializable();
+        this.javaSerializer();
 
         this.logger.exit();
     }
@@ -294,6 +300,59 @@ final class Serializers {
                 if (this.logger.isDebugEnabled()) {
                     this.logger.debug("chair       : {}", chair.toString());
                     this.logger.debug("deserialized: {}", deserializedChair.toString());
+                }
+            }
+        } catch (final FileNotFoundException fnfe) {
+            this.logger.catching(fnfe);
+        }
+
+        this.logger.exit();
+    }
+
+    /**
+     * Use the standard Java serializable interface.
+     */
+    private void javaSerializer() {
+        this.logger.entry();
+
+        final Recording recording = new Recording();
+        final List<String> artists = new ArrayList<>();
+
+        artists.add("Elsa Dreisig");
+        artists.add("Mathilde Calderini");
+        artists.add("Anna Besson");
+        artists.add("Scarlett Strallen");
+
+        recording.setArtists(artists);
+        recording.setLabel("Decca Classics");
+        recording.setTitle("A Musical Potpurri");
+        recording.setTimeInMinutes(69);
+
+        final var outputFileName = this.config.getConfigFiles().getMain();
+
+        /* Serialize recording */
+
+        this.kryo.register(Recording.class, new JavaSerializer());
+
+        try (final var output = new Output(new FileOutputStream(outputFileName))) {
+            this.kryo.writeObject(output, recording);
+        } catch (final FileNotFoundException fnfe) {
+            this.logger.catching(fnfe);
+        }
+
+        /* Deserialize */
+
+        try (final var input = new Input(new FileInputStream(outputFileName))) {
+            final var deserializedRecording = this.kryo.readObject(input, Recording.class);
+
+            if (deserializedRecording.equals(recording))
+                this.logger.info("Serialized recording and deserialized recording match");
+            else {
+                this.logger.warn("Serialized recording and deserialized recording do not match");
+
+                if (this.logger.isDebugEnabled()) {
+                    this.logger.debug("recording   : {}", recording.toString());
+                    this.logger.debug("deserialized: {}", deserializedRecording.toString());
                 }
             }
         } catch (final FileNotFoundException fnfe) {

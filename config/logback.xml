@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
+ (#)logback.xml 0.4.0   05/17/2024
  (#)logback.xml 0.3.0   05/16/2024
  (#)logback.xml 0.1.0   05/15/2024
 
  @author   Jonathan Parker
- @version  0.3.0
+ @version  0.4.0
  @since    0.1.0
 
  MIT License
@@ -41,16 +42,16 @@
     <logger name="net.jmp.demo.kryo5.Main" additivity="false" level="info">
         <appender-ref ref="MAIN" />
     </logger>
-    <logger name="net.jmp.demo.kryo5.Objects" additivity="false" level="debug">
+    <logger name="net.jmp.demo.kryo5.Objects" additivity="false" level="info">
         <appender-ref ref="MAIN" />
     </logger>
-    <logger name="net.jmp.demo.kryo5.custom.PersonSerializer" additivity="false" level="trace">
+    <logger name="net.jmp.demo.kryo5.custom.PersonSerializer" additivity="false" level="info">
         <appender-ref ref="MAIN" />
     </logger>
-    <logger name="net.jmp.demo.kryo5.custom.PetSerializer" additivity="false" level="trace">
+    <logger name="net.jmp.demo.kryo5.custom.PetSerializer" additivity="false" level="info">
         <appender-ref ref="MAIN" />
     </logger>
-    <logger name="net.jmp.demo.kryo5.Serializers" additivity="false" level="trace">
+    <logger name="net.jmp.demo.kryo5.Serializers" additivity="false" level="info">
         <appender-ref ref="MAIN" />
     </logger>
 

@@ -1,10 +1,11 @@
 package net.jmp.demo.kryo5;
 
 /*
+ * (#)TestSerializers.java  0.4.0   05/17/2024
  * (#)TestSerializers.java  0.3.0   05/16/2024
  *
  * @author   Jonathan Parker
- * @version  0.3.0
+ * @version  0.4.0
  * @since    0.3.0
  *
  * MIT License
@@ -35,6 +36,8 @@ import com.esotericsoftware.kryo.kryo5.Kryo;
 import com.esotericsoftware.kryo.kryo5.io.Input;
 import com.esotericsoftware.kryo.kryo5.io.Output;
 
+import com.esotericsoftware.kryo.kryo5.serializers.JavaSerializer;
+
 import com.google.gson.Gson;
 
 import java.io.FileInputStream;
@@ -48,7 +51,9 @@ import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.Before;
@@ -63,6 +68,7 @@ import net.jmp.demo.kryo5.custom.PersonSerializer;
 import net.jmp.demo.kryo5.objects.Chair;
 import net.jmp.demo.kryo5.objects.Person;
 import net.jmp.demo.kryo5.objects.Pet;
+import net.jmp.demo.kryo5.objects.Recording;
 
 public class TestSerializers {
     /** The configuration file name. */
@@ -237,5 +243,39 @@ public class TestSerializers {
         this.input.close();
 
         assertEquals(chair, deserializedChair);
+    }
+
+    /**
+     * Test an object that implements the standard Java serializable interface.
+     */
+    @Test
+    public void testJavaSerializable() {
+        final Recording recording = new Recording();
+        final List<String> artists = new ArrayList<>();
+
+        artists.add("Elsa Dreisig");
+        artists.add("Mathilde Calderini");
+        artists.add("Anna Besson");
+        artists.add("Scarlett Strallen");
+
+        recording.setArtists(artists);
+        recording.setLabel("Decca Classics");
+        recording.setTitle("A Musical Potpurri");
+        recording.setTimeInMinutes(69);
+
+        this.kryo.register(Recording.class, new JavaSerializer());
+
+        /* Serialize recording */
+
+        this.kryo.writeObject(output, recording);
+        this.output.close();
+
+        /* Deserialize */
+
+        final var deserializedRecording = this.kryo.readObject(input, Recording.class);
+
+        this.input.close();
+
+        assertEquals(recording, deserializedRecording);
     }
 }
