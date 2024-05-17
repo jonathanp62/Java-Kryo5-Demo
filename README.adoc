@@ -2,8 +2,15 @@
 
 This demonstration program focuses on using Kryo5 for serialization and deserialization.
 
+== Configuration Settings
+
+The configuration is expressed in JSON and is supplied in config/config.json. It has a single section, *'files'*.
+
+* *main* The name of the file that objects will be serialized to by the application
+* *test* The name of the file that objects will be serialized to by the unit tests
+
 == Logging
 
 Logging is achieved using the SLF4J facade over Logback. The logging configuration is supplied in config/logback.xml.
 
-=== Current version: 0.3.0.
+=== Current version: 0.4.0.
