@@ -30,9 +30,15 @@ package net.jmp.demo.kryo5.objects;
  * SOFTWARE.
  */
 
+import com.esotericsoftware.kryo.kryo5.Kryo;
+import com.esotericsoftware.kryo.kryo5.KryoSerializable;
+
+import com.esotericsoftware.kryo.kryo5.io.Input;
+import com.esotericsoftware.kryo.kryo5.io.Output;
+
 import java.util.Objects;
 
-public final class Chair {
+public final class Chair implements KryoSerializable {
     private String color;
     private boolean hasWheels;
 
@@ -54,6 +60,34 @@ public final class Chair {
 
     public void setHasWheels(final boolean hasWheels) {
         this.hasWheels = hasWheels;
+    }
+
+    /**
+     * Serialize the chair object.
+     *
+     * @param   kryo    com.esotericsoftware.kryo.kryo5.Kryo
+     * @param   output  com.esotericsoftware.kryo.kryo5.io.Output
+     */
+    @Override
+    public void write(final Kryo kryo, final Output output) {
+        output.writeString(this.color);
+        output.writeBoolean(this.hasWheels);
+    }
+
+    /**
+     * Deserialize the chair object.
+     *
+     * This is important - The sequence of the
+     * reads from input must be the same as the
+     * writes to output.
+     *
+     * @param   kryo    com.esotericsoftware.kryo.kryo5.Kryo
+     * @param   input   com.esotericsoftware.kryo.kryo5.io.Input
+     */
+    @Override
+    public void read(final Kryo kryo, final Input input) {
+        this.color = input.readString();
+        this.hasWheels = input.readBoolean();
     }
 
     @Override

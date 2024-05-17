@@ -51,7 +51,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 
-import net.jmp.demo.kryo5.objects.Pet;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -61,7 +60,9 @@ import net.jmp.demo.kryo5.config.Config;
 
 import net.jmp.demo.kryo5.custom.PersonSerializer;
 
+import net.jmp.demo.kryo5.objects.Chair;
 import net.jmp.demo.kryo5.objects.Person;
+import net.jmp.demo.kryo5.objects.Pet;
 
 public class TestSerializers {
     /** The configuration file name. */
@@ -217,6 +218,24 @@ public class TestSerializers {
      */
     @Test
     public void testKryoSerializable() {
-        assertTrue(true);
+        final var chair = new Chair();
+
+        chair.setColor("Green");
+        chair.setHasWheels(false);
+
+        this.kryo.register(Chair.class);
+
+        /* Serialize chair */
+
+        this.kryo.writeObject(output, chair);
+        this.output.close();
+
+        /* Deserialize */
+
+        final var deserializedChair = this.kryo.readObject(input, Chair.class);
+
+        this.input.close();
+
+        assertEquals(chair, deserializedChair);
     }
 }

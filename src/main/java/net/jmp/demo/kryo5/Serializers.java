@@ -52,6 +52,7 @@ import net.jmp.demo.kryo5.config.Config;
 
 import net.jmp.demo.kryo5.custom.PersonSerializer;
 
+import net.jmp.demo.kryo5.objects.Chair;
 import net.jmp.demo.kryo5.objects.Person;
 import net.jmp.demo.kryo5.objects.Pet;
 
@@ -262,6 +263,43 @@ final class Serializers {
      */
     private void kryoSerializable() {
         this.logger.entry();
+
+        final var chair = new Chair();
+
+        chair.setColor("Black");
+        chair.setHasWheels(true);
+
+        final var outputFileName = this.config.getConfigFiles().getMain();
+
+        /* Serialize chair */
+
+        this.kryo.register(Chair.class);
+
+        try (final var output = new Output(new FileOutputStream(outputFileName))) {
+            this.kryo.writeObject(output, chair);
+        } catch (final FileNotFoundException fnfe) {
+            this.logger.catching(fnfe);
+        }
+
+        /* Deserialize */
+
+        try (final var input = new Input(new FileInputStream(outputFileName))) {
+            final var deserializedChair = this.kryo.readObject(input, Chair.class);
+
+            if (deserializedChair.equals(chair))
+                this.logger.info("Serialized chair and deserialized chair match");
+            else {
+                this.logger.warn("Serialized chair and deserialized chair do not match");
+
+                if (this.logger.isDebugEnabled()) {
+                    this.logger.debug("chair       : {}", chair.toString());
+                    this.logger.debug("deserialized: {}", deserializedChair.toString());
+                }
+            }
+        } catch (final FileNotFoundException fnfe) {
+            this.logger.catching(fnfe);
+        }
+
         this.logger.exit();
     }
 }
