@@ -51,6 +51,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 
+import net.jmp.demo.kryo5.objects.Pet;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -188,7 +189,27 @@ public class TestSerializers {
      */
     @Test
     public void testAnnotatedDefaultSerializer() {
-        assertTrue(true);
+        final var pet = new Pet();
+
+        pet.setAge(12);
+        pet.setName("Lady");
+        pet.setColor("Black & Tan");
+        pet.setType("German Shepherd Dog");
+
+        this.kryo.register(Pet.class);
+
+        /* Serialize pet */
+
+        this.kryo.writeObject(output, pet);
+        this.output.close();
+
+        /* Deserialize */
+
+        final var deserializedPet = this.kryo.readObject(input, Pet.class);
+
+        this.input.close();
+
+        assertEquals(pet, deserializedPet);
     }
 
     /**
